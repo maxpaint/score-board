@@ -9,9 +9,9 @@ The `ScoreBoard` interface is a basic contract for the scoreboard library.
 
 `T updateMatch(T match, int homeScore, int awayScore)` - This method updates existing Match in the board.
 
-**All parameters in method are required. 
+**All parameters in method are required.** 
 
-If scoreboard doesn't contain the Match, `FootballTeamDoesNotExistException` exception will be triggered .** 
+**If scoreboard doesn't contain the Match, `FootballTeamDoesNotExistException` exception will be triggered .**
 
 
 `boolean finishMatch(T match)` - This method removed the Match from the board. Returns true when match was in the board and false if it wasn't.
