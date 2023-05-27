@@ -21,10 +21,13 @@ The `ScoreBoard` interface is a basic contract for the scoreboard library.
 
 Right now this library contains only implementation of `FootBallScoreBoard`.
 I did assumption that `List<T> getSummary()` will be called more often, then others.
-That is why I have decided to use the TreeSet as the match holder and sort the board during the update and start match. As a result method `List<T> getSummary()` will work fast for O(1).
+That is why I have decided to use the TreeSet as the match holder and sort the board during the update and start match. 
+
+As a result method `List<T> getSummary()` will work fast for O(1).
 Methods:
-`T startMatch(String homeTeam, String awayTeam)`,
-`T updateMatch(T match, int homeScore, int awayScore)`,
-`boolean finishMatch(T match)`
+ - `T startMatch(String homeTeam, String awayTeam)`,
+ - `T updateMatch(T match, int homeScore, int awayScore)`,
+ - `boolean finishMatch(T match)`
+
 will work for O(log(N)).
 
