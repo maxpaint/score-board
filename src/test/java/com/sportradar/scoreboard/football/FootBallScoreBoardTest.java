@@ -1,5 +1,6 @@
 package com.sportradar.scoreboard.football;
 
+import com.sportradar.scoreboard.ScoreBoard;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -64,7 +65,7 @@ class FootBallScoreBoardTest {
 
         assertThatThrownBy(() -> {
             board.updateMatch(new FootballMatch("test1", "test2"), 0, 2);
-        }).isInstanceOf(FootballTeamDoesNotExist.class);
+        }).isInstanceOf(FootballTeamDoesNotExistException.class);
 
         assertThat(board.getSummary()).hasSize(0);
     }

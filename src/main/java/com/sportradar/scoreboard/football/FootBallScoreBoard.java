@@ -1,5 +1,7 @@
 package com.sportradar.scoreboard.football;
 
+import com.sportradar.scoreboard.ScoreBoard;
+
 import java.util.*;
 
 public class FootBallScoreBoard implements ScoreBoard<FootballMatch> {
@@ -24,7 +26,7 @@ public class FootBallScoreBoard implements ScoreBoard<FootballMatch> {
     @Override
     public FootballMatch updateMatch(FootballMatch match, int homeScore, int awayScore) {
         if (!board.remove(match)) {
-           throw new FootballTeamDoesNotExist();
+           throw new FootballTeamDoesNotExistException();
         }
         FootballMatch updated = match.update(homeScore, awayScore);
         board.add(updated);
