@@ -13,7 +13,7 @@ public record FootballMatch(String homeTeam, int homeScore, String awayTeam, int
         this(homeTeam, 0, awayTeam, 0, now());
     }
 
-    public FootballMatch update(int homeScore, int awayScore) {
+    FootballMatch update(int homeScore, int awayScore) {
         return new FootballMatch(this.homeTeam, homeScore, this.awayTeam, awayScore, this.startTime);
     }
 

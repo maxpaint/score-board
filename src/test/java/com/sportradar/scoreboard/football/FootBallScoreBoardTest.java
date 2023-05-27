@@ -8,13 +8,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-
 class FootBallScoreBoardTest {
 
     ScoreBoard<FootballMatch> board = new FootBallScoreBoard();
 
     @Test
-    void start() {
+    void start_twoStringParams_returnMatch() {
         board.startMatch("homeTeam", "awayTeam");
 
         assertThat(board.getSummary()).hasSize(1);
@@ -41,7 +40,7 @@ class FootBallScoreBoardTest {
     }
 
     @Test
-    void update() {
+    void update_MatchWithHomeScore0AndAway2_returnUpdatedMatch() {
         FootballMatch match = board.startMatch("homeTeam", "awayTeam");
 
         assertThat(board.getSummary()).hasSize(1);
@@ -61,7 +60,6 @@ class FootBallScoreBoardTest {
 
     @Test
     void update_withNotExistsTeam_returnException() {
-
         assertThat(board.getSummary()).hasSize(0);
 
         assertThatThrownBy(() -> {
@@ -92,7 +90,7 @@ class FootBallScoreBoardTest {
     }
 
     @Test
-    void getSummary() {
+    void getSummary_positiveScenario() {
         FootballMatch mc = board.startMatch("Mexico", "Canada");
         board.updateMatch(mc, 0, 5);
         FootballMatch sb = board.startMatch("Spain", "Brazil");
@@ -107,11 +105,20 @@ class FootBallScoreBoardTest {
         List<FootballMatch> summary = board.getSummary();
         assertThat(summary).hasSize(5);
 
-        assertThat(summary).element(0).extracting("homeTeam").isEqualTo("Uruguay");
-        assertThat(summary).element(1).extracting("homeTeam").isEqualTo("Spain");
-        assertThat(summary).element(2).extracting("homeTeam").isEqualTo("Mexico");
-        assertThat(summary).element(3).extracting("homeTeam").isEqualTo("Argentina");
-        assertThat(summary).element(4).extracting("homeTeam").isEqualTo("Germany");
+        assertThat(summary.get(0).homeTeam()).isEqualTo("Uruguay");
+        assertThat(summary.get(0).awayTeam()).isEqualTo("Italy");
+
+        assertThat(summary.get(1).homeTeam()).isEqualTo("Spain");
+        assertThat(summary.get(1).awayTeam()).isEqualTo("Brazil");
+
+        assertThat(summary.get(2).homeTeam()).isEqualTo("Mexico");
+        assertThat(summary.get(2).awayTeam()).isEqualTo("Canada");
+
+        assertThat(summary.get(3).homeTeam()).isEqualTo("Argentina");
+        assertThat(summary.get(3).awayTeam()).isEqualTo("Australia");
+
+        assertThat(summary.get(4).homeTeam()).isEqualTo("Germany");
+        assertThat(summary.get(4).awayTeam()).isEqualTo("France");
 
     }
 }
