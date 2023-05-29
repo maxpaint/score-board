@@ -1,9 +1,9 @@
 package com.sportradar.scoreboard.football;
 
 import com.sportradar.scoreboard.ScoreBoard;
-import com.sportradar.scoreboard.football.exception.TeamDoesNotExistException;
-import com.sportradar.scoreboard.football.exception.InvalidScoreException;
-import com.sportradar.scoreboard.football.exception.InvalidTeamNameException;
+import com.sportradar.scoreboard.exception.TeamDoesNotExistException;
+import com.sportradar.scoreboard.exception.InvalidScoreException;
+import com.sportradar.scoreboard.exception.InvalidTeamNameException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

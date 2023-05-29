@@ -1,7 +1,7 @@
 package com.sportradar.scoreboard.football;
 
 import com.sportradar.scoreboard.ScoreBoard;
-import com.sportradar.scoreboard.football.exception.TeamDoesNotExistException;
+import com.sportradar.scoreboard.exception.TeamDoesNotExistException;
 
 import java.util.*;
 

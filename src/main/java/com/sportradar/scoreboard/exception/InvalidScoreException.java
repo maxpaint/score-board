@@ -1,4 +1,4 @@
-package com.sportradar.scoreboard.football.exception;
+package com.sportradar.scoreboard.exception;
 
 public class InvalidScoreException extends RuntimeException {
 
