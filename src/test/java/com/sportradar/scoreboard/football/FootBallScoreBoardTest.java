@@ -1,6 +1,9 @@
 package com.sportradar.scoreboard.football;
 
 import com.sportradar.scoreboard.ScoreBoard;
+import com.sportradar.scoreboard.football.exception.TeamDoesNotExistException;
+import com.sportradar.scoreboard.football.exception.InvalidScoreException;
+import com.sportradar.scoreboard.football.exception.InvalidTeamNameException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -24,7 +27,6 @@ class FootBallScoreBoardTest {
         assertThat(footballMatch.awayTeam()).isEqualTo("awayTeam");
         assertThat(footballMatch.homeScore()).isEqualTo(0);
         assertThat(footballMatch.awayScore()).isEqualTo(0);
-
     }
 
     @Test
@@ -37,7 +39,13 @@ class FootBallScoreBoardTest {
         board.startMatch("homeTeam", "awayTeam");
         assertThat(board.getSummary()).hasSize(1);
         assertThat(startDate).isEqualTo(board.getSummary().get(0).startTime());
+    }
 
+    @Test
+    void start_CallWithEmptyParams() {
+        assertThatThrownBy(() -> board.startMatch("", ""))
+                .isInstanceOf(InvalidTeamNameException.class)
+                .hasMessageContaining("Can't start the match, because params homeTeam:  or awayTeam:  can't be empty");
     }
 
     @Test
@@ -63,11 +71,27 @@ class FootBallScoreBoardTest {
     void update_withNotExistsTeam_returnException() {
         assertThat(board.getSummary()).hasSize(0);
 
-        assertThatThrownBy(() -> {
-            board.updateMatch(new FootballMatch("test1", "test2"), 0, 2);
-        }).isInstanceOf(FootballTeamDoesNotExistException.class);
+        assertThatThrownBy(() -> board.updateMatch(new FootballMatch("test1", "test2"), 0, 2)).isInstanceOf(TeamDoesNotExistException.class);
 
         assertThat(board.getSummary()).hasSize(0);
+    }
+
+    @Test
+    void update_homeTeamHasNegativeScore_returnException() {
+        FootballMatch match = board.startMatch("homeTeam", "awayTeam");
+
+        assertThatThrownBy(() -> board.updateMatch(match, -1, 2))
+                .isInstanceOf(InvalidScoreException.class)
+                .hasMessageContaining("Score can't be negative. Please check the input params: homeScore: -1 and awayScore: 2");
+    }
+
+    @Test
+    void update_awayTeamHasNegativeScore_returnException() {
+        FootballMatch match = board.startMatch("homeTeam", "awayTeam");
+
+        assertThatThrownBy(() -> board.updateMatch(match, 2, -1))
+                .isInstanceOf(InvalidScoreException.class)
+                .hasMessageContaining("Score can't be negative. Please check the input params: homeScore: 2 and awayScore: -1");
     }
 
     @Test
@@ -82,10 +106,11 @@ class FootBallScoreBoardTest {
     }
 
     @Test
-    void finish_existMatch_returnFalse() {
+    void finish_MatchDoesnotExist_returnFalse() {
         assertThat(board.getSummary()).hasSize(0);
 
-        assertThat(board.finishMatch(new FootballMatch("", ""))).isFalse();
+        assertThatThrownBy(() -> board.finishMatch(new FootballMatch("t1", "t2")))
+                .isInstanceOf(TeamDoesNotExistException.class);
 
         assertThat(board.getSummary()).hasSize(0);
     }

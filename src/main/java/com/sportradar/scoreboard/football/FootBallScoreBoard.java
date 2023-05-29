@@ -1,32 +1,36 @@
 package com.sportradar.scoreboard.football;
 
 import com.sportradar.scoreboard.ScoreBoard;
+import com.sportradar.scoreboard.football.exception.TeamDoesNotExistException;
 
 import java.util.*;
 
 public class FootBallScoreBoard implements ScoreBoard<FootballMatch> {
 
     private final Set<FootballMatch> board = new TreeSet<>();
+
     @Override
     public FootballMatch startMatch(String homeTeam, String awayTeam) {
+        String homeTeamStriped = homeTeam.strip();
+        String awayTeamStriped = awayTeam.strip();
+
         Optional<FootballMatch> existedMatch = board
                 .stream()
-                .filter(match -> match.homeTeam().equals(homeTeam) && match.awayTeam().equals(awayTeam))
+                .filter(match -> match.homeTeam().equals(homeTeamStriped) && match.awayTeam().equals(awayTeamStriped))
                 .findFirst();
 
         if (existedMatch.isEmpty()) {
-            FootballMatch footballMatch = new FootballMatch(homeTeam, awayTeam);
+            FootballMatch footballMatch = new FootballMatch(homeTeamStriped, awayTeamStriped);
             board.add(footballMatch);
             return footballMatch;
         }
-
         return existedMatch.get();
     }
 
     @Override
     public FootballMatch updateMatch(FootballMatch match, int homeScore, int awayScore) {
         if (!board.remove(match)) {
-           throw new FootballTeamDoesNotExistException();
+            throw new TeamDoesNotExistException();
         }
         FootballMatch updated = match.update(homeScore, awayScore);
         board.add(updated);
@@ -35,7 +39,10 @@ public class FootBallScoreBoard implements ScoreBoard<FootballMatch> {
 
     @Override
     public boolean finishMatch(FootballMatch match) {
-        return board.remove(match);
+        if (!board.remove(match)) {
+            throw new TeamDoesNotExistException();
+        }
+        return true;
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.sportradar.scoreboard.football;
 
+import com.sportradar.scoreboard.football.exception.InvalidScoreException;
+import com.sportradar.scoreboard.football.exception.InvalidTeamNameException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class FootballMatchTest {
 
@@ -80,5 +83,40 @@ class FootballMatchTest {
     void testEquals_FirstAndSecondMatchHaveTheSameAwayTeamNameAndDifferentHome_returnFalse() {
         boolean result = new FootballMatch("homeTeam", "awayTeam").equals(new FootballMatch("homeTeam1", "awayTeam"));
         assertThat(result).isFalse();
+    }
+
+    @Test
+    void footballMatch_HomeTeamCantBeEmpty_throwException() {
+        assertThatThrownBy(() -> new FootballMatch(" ", "test2"))
+                .isInstanceOf(InvalidTeamNameException.class)
+                .hasMessageContaining("Can't start the match, because params homeTeam:  or awayTeam: test2 can't be empty");
+    }
+
+    @Test
+    void footballMatch_HomeTeamScoreCantBeNegative_throwException() {
+        assertThatThrownBy(() -> new FootballMatch("1", -2, "2", 3, LocalDateTime.now()))
+                .isInstanceOf(InvalidScoreException.class)
+                .hasMessageContaining("Score can't be negative. Please check the input params: homeScore: -2 and awayScore: 3");
+    }
+
+    @Test
+    void footballMatch_AwayTeamCantBeEmpty_throwException() {
+        assertThatThrownBy(() -> new FootballMatch("team1", " "))
+                .isInstanceOf(InvalidTeamNameException.class)
+                .hasMessageContaining("Can't start the match, because params homeTeam: team1 or awayTeam:  can't be empty");
+    }
+
+    @Test
+    void footballMatch_AwayTeamScoreCantBeNegative_throwException() {
+        assertThatThrownBy(() -> new FootballMatch("1", 2, "2", -3, LocalDateTime.now()))
+                .isInstanceOf(InvalidScoreException.class)
+                .hasMessageContaining("Score can't be negative. Please check the input params: homeScore: 2 and awayScore: -3");
+    }
+
+    @Test
+    void footballMatch_HameTeamAndAwayTeamHaveTheSameName_throwException() {
+        assertThatThrownBy(() -> new FootballMatch("team1", 2, "team1", 3, LocalDateTime.now()))
+                .isInstanceOf(InvalidTeamNameException.class)
+                .hasMessageContaining("Can't start the match, home and away teams have the same names. Please check the params: homeTeam: team1 or awayTeam: team1 can't be empty");
     }
 }
